@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>K8S</title>
+  </head>
+  <body style="background-color: bisque">
+    <center>
+      <input id="name" type="text" placeholder="name..." />
+      <input id="email" type="text" placeholder="email..." />
+      <input id="password" type="text" placeholder="password..." />
+      <br />
+      <br />
+      <button onclick="addUser()">Add user</button>
+      <button onclick="showUsers()">Show users</button>
+      <br />
+      <br />
+      <br />
+      <div id="container"></div>
+    </center>
+
+    <script>
+      async function showUsers() {
+        try {
+          const response = await fetch("http://localhost:3000/users");
+          const data = await response.json();
+
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+
+          if (!data.users || data.users.length === 0) {
+            document.getElementById("container").innerHTML =
+              "Empty list of users!";
+            return;
+          }
+
+          const container = document.getElementById("container");
+          container.innerHTML = "";
+
+          for (let i = 0; i < data.users.length; i++) {
+            let user = data.users[i];
+            container.innerHTML += `${user.name}<br/>`;
+          }
+        } catch (err) {
+          alert("Network error: " + err.message);
+        }
+      }
+
+      async function addUser() {
+        try {
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          if (!name || !email || !password) {
+            alert("Provide your credienttials...");
+            return;
+          }
+
+          const response = await fetch("http://localhost:3000/user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              email,
+              password,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.message) {
+            alert(data.message);
+          } else {
+            alert(data.error || "Something went wrong!");
+          }
+
+          document.getElementById("container").innerHTML = "";
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("password").value = "";
+        } catch (err) {
+          alert("Network error: " + err.message);
+        }
+      }
+    </script>
+  </body>
+</html>
