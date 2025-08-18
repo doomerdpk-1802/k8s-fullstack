@@ -1,0 +1,41 @@
+# Creating Backend Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backendnamespace
+---
+# Creating Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: backendnamespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: doomerdpk/k8s_fullstack-backend
+          ports:
+            - containerPort: 3000
+---
+# Creating Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

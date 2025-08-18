@@ -11,7 +11,7 @@ app.use(cors());
 
 async function startApplication() {
   try {
-    await mongoose.connect(process.env.DATABASE_URL);
+    await mongoose.connect("mongodb://db.svc.cluster.local:27017/k8s_db");
     console.log("Connected to database");
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
