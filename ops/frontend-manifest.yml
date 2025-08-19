@@ -9,7 +9,7 @@ metadata:
   name: frontend-deployment
   namespace: frontendnamespace
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: doomerdpk/k8s_fullstack-frontend
+          image: doomerdpk/k8s_fullstack-frontend:v1
           ports:
             - containerPort: 80
 ---
@@ -28,11 +28,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  namespace: frontendnamespace
 spec:
   selector:
     app: frontend
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
+      port: 8080
+      targetPort: 80
   type: ClusterIP

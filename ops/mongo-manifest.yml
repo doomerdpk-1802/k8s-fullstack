@@ -27,6 +27,6 @@ spec:
     app: db
   ports:
     - protocol: TCP
-      port: 27017
-      targetPort: 27017
+      port: 27017 # service port
+      targetPort: 27017 # container port
   type: ClusterIP
