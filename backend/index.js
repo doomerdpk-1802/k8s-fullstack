@@ -23,11 +23,11 @@ async function startApplication() {
   }
 }
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/user", async (req, res) => {
+app.post("/api/user", async (req, res) => {
   const user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -46,7 +46,7 @@ app.post("/user", async (req, res) => {
   }
 });
 
-app.get("/users", async (req, res) => {
+app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find();
     res.json({ users });

@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: doomerdpk/k8s_fullstack-frontend:v1
+          image: doomerdpk/k8s_fullstack-frontend:v2
           ports:
             - containerPort: 80
 ---

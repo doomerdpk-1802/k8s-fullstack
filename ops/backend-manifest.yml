@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: doomerdpk/k8s_fullstack-backend:v1
+          image: doomerdpk/k8s_fullstack-backend:v2
           ports:
             - containerPort: 3000
 ---
@@ -38,5 +38,5 @@ spec:
   ports:
     - protocol: TCP
       port: 3000
-      targetPort: 3007
+      targetPort: 3000
   type: ClusterIP
