@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: haproxy-controller
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: haproxy-kubernetes-ingress
+rules:
+  - apiGroups: [""]
+    resources:
+      [
+        "configmaps",
+        "endpoints",
+        "nodes",
+        "pods",
+        "secrets",
+        "services",
+        "namespaces",
+      ]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources: ["ingresses", "ingressclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses/status"]
+    verbs: ["update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: haproxy-kubernetes-ingress
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: haproxy-kubernetes-ingress
+subjects:
+  - kind: ServiceAccount
+    name: haproxy-kubernetes-ingress
+    namespace: haproxy-controller
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+data:
+  syslog-endpoint: "stdout"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: haproxy-ingress
+  template:
+    metadata:
+      labels:
+        run: haproxy-ingress
+    spec:
+      serviceAccountName: haproxy-kubernetes-ingress
+      containers:
+        - name: haproxy-ingress
+          image: haproxytech/kubernetes-ingress:latest
+          args:
+            - --configmap=haproxy-controller/haproxy-kubernetes-ingress
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+            - name: stat
+              containerPort: 1024
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+spec:
+  type: LoadBalancer
+  selector:
+    run: haproxy-ingress
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443
+    - name: stat
+      port: 1024
+      targetPort: 1024

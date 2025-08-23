@@ -3,10 +3,9 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   namespace: frontendnamespace
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: nginx
+  # ingressClassName: nginx
+  ingressClassName: haproxy
   rules:
     - host: k8s.deepak.cfd
       http:
@@ -25,7 +24,8 @@ metadata:
   name: backend-ingress
   namespace: backendnamespace
 spec:
-  ingressClassName: nginx
+  # ingressClassName: nginx
+  ingressClassName: haproxy
   rules:
     - host: k8s.deepak.cfd
       http:
