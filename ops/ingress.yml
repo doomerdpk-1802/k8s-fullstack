@@ -4,8 +4,8 @@ metadata:
   name: frontend-ingress
   namespace: frontendnamespace
 spec:
-  # ingressClassName: nginx
-  ingressClassName: haproxy
+  ingressClassName: nginx
+  # ingressClassName: haproxy
   rules:
     - host: k8s.deepak.cfd
       http:
@@ -24,8 +24,8 @@ metadata:
   name: backend-ingress
   namespace: backendnamespace
 spec:
-  # ingressClassName: nginx
-  ingressClassName: haproxy
+  ingressClassName: nginx
+  # ingressClassName: haproxy
   rules:
     - host: k8s.deepak.cfd
       http:
