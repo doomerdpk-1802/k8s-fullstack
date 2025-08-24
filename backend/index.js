@@ -1,19 +1,19 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.port;
 const mongoose = require("mongoose");
 const User = require("./db");
 const cors = require("cors");
-require("dotenv").config();
+require("dotenv").config({
+  path: "./secrets/.env",
+});
 
 app.use(express.json());
 app.use(cors());
 
 async function startApplication() {
   try {
-    await mongoose.connect(
-      "mongodb://db.default.svc.cluster.local:27017/k8s_db"
-    );
+    await mongoose.connect(process.env.DATABASE_URL);
     console.log("Connected to database");
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
