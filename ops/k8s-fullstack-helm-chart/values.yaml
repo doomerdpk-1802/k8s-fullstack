@@ -1,0 +1,48 @@
+db:
+  pvcname: db-pvc
+  pvstorage: 1Gi
+  dbdeploymentname: db-deployment
+  dbreplicas: 1
+  dbpodselector: db
+  dbcontainername: db
+  dbimage:
+    repository: mongo
+    tag: "latest"
+  dbvolumename: db-storage
+  dbmountpath: /data/db
+  dbservicename: db
+
+backend:
+  backendnamespace: backendnamespace
+  backendconfigmapname: backendconfigmap
+  backendsecretname: backendsecret
+  backenddeploymentname: backend-deployment
+  backendreplicas: 2
+  backendpodselector: backend
+  backendcontainername: backend
+  backendimage:
+    repository: doomerdpk/k8s_fullstack-backend
+    tag: "dotenv"
+  backendsecretvolumename: env-file
+  backendsecretmountpath: /app/secrets
+  backendservicename: backend
+
+frontend:
+  frontendnamespace: frontendnamespace
+  frontenddeploymentname: frontend-deployment
+  frontendreplicas: 1
+  frontendpodselector: frontend
+  frontendcontainername: frontend
+  frontendimage:
+    repository: doomerdpk/k8s_fullstack-frontend
+    tag: "v2"
+  frontendservicename: frontend
+
+ingress:
+  frontendingressname: frontendingress
+  backendingressname: backendingress
+  ingresshost: k8s.deepak.cfd
+  frontendnamespace: frontendnamespace
+  frontendservicename: frontend
+  backendnamespace: backendnamespace
+  backendservicename: backend

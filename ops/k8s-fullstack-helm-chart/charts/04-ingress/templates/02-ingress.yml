@@ -1,41 +1,41 @@
+# prettier-ignore
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-ingress
-  namespace: frontendnamespace
+  name: {{.Values.frontendingressname}}
+  namespace: {{.Values.frontendnamespace}}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
-  # ingressClassName: haproxy
   rules:
-    - host: k8s.deepak.cfd
+    - host: {{.Values.ingresshost}}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: {{.Values.frontendservicename}}
                 port:
                   number: 8080
 ---
+# prettier-ignore
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: backend-ingress
-  namespace: backendnamespace
+  name: {{.Values.backendingressname}}
+  namespace: {{.Values.backendnamespace}}
 spec:
   ingressClassName: nginx
-  # ingressClassName: haproxy
   rules:
-    - host: k8s.deepak.cfd
+    - host: {{.Values.ingresshost}}
       http:
         paths:
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: {{.Values.backendservicename}}
                 port:
                   number: 3000

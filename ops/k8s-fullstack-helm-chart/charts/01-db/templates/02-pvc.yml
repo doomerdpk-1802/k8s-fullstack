@@ -1,11 +1,12 @@
+# prettier-ignore
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-pvc
+  name: {{.Values.pvcname}}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: "{{.Values.pvstorage}}"
   storageClassName: gp3
